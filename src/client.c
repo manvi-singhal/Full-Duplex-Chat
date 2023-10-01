@@ -17,7 +17,7 @@ int main()
     char sendBuffer[1000], recvBuffer[1000];
 
     pid_t cpid;
-
+   /defining server address and port/
     bzero(&serverAddress, sizeof(serverAddress));
 
     serverAddress.sin_family = AF_INET;

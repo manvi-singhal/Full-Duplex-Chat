@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     char recvBuffer[1000], sendBuffer[1000];
     pid_t cpid;
     bzero(&serverAddress, sizeof(serverAddress));
-    //Socket address structure
+    //Socket address Generation
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
     serverAddress.sin_port = htons(5500);
@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
 
     if (cpid == 0)
     {
+        //loop and read message till the condition is 1
         while (1)
         {
             bzero(&recvBuffer, sizeof(recvBuffer));
