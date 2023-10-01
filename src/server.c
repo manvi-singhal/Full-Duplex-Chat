@@ -6,25 +6,32 @@
 #include<arpa/inet.h>
 #include<netinet/in.h>
 #include<string.h>
+
 int main(int argc,char *argv[])
 {
 int clientSocketDescriptor,socketDescriptor;
+
+struct sockaddr_in serverAddress,clientAddress;
 socklen_t clientLength;
-char recvBuffer[8000],sendBuffer[8080];
-pid_tcpid;
+
+char recvBuffer[1000],sendBuffer[1000];
+pid_t cpid;
 bzero(&serverAddress,sizeof(serverAddress));
 serverAddress.sin_family=AF_INET;
-serverAddress.sin_port=htons(9652);
+serverAddress.sin_addr.s_addr=htonl(INADDR_ANY);
+serverAddress.sin_port=htons(5500);
+socketDescriptor=socket(AF_INET,SOCK_STREAM,0);
 bind(socketDescriptor,(struct sockaddr*)&serverAddress,sizeof(serverAddress));
+listen(socketDescriptor,5);
 printf("%s\n","Server is running ...");
-clientSocketDescriptor=accept(socketDescriptor,(struct
-sockaddr*)&clientAddress,&clientLength);
-
+clientSocketDescriptor=accept(socketDescriptor,(struct sockaddr*)&clientAddress,&clientLength);
+cpid=fork();
 if(cpid==0)
 {
 while(1)
 {
 bzero(&recvBuffer,sizeof(recvBuffer));
+recv(clientSocketDescriptor,recvBuffer,sizeof(recvBuffer),0);
 printf("\nCLIENT : %s\n",recvBuffer);
 }
 }
@@ -33,7 +40,8 @@ else
 while(1)
 {
 bzero(&sendBuffer,sizeof(sendBuffer));
-printf("\nType a message here ... ");
+printf("\nType a message here ...  ");
+fgets(sendBuffer,10000,stdin);
 send(clientSocketDescriptor,sendBuffer,strlen(sendBuffer)+1,0);
 printf("\nMessage sent !\n");
 }
